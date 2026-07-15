@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Astra Music Downloader
+Comment=Descarga música de YouTube a 320 kbps
+Exec=/opt/AstraMusicDownloader/AstraMusicDownloader.py
+Icon=astramusic-logo
+Categories=AudioVideo;Audio;
+Terminal=false

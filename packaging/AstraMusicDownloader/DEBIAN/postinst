@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+# Dar permisos de ejecución al nuevo script
+chmod +x /opt/AstraMusicDownloader/AstraMusicDownloader.py
+
+# Actualizar cachés de iconos y menú de aplicaciones de forma segura
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
+fi
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
+fi
+
+exit 0
