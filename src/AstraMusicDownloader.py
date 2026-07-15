@@ -326,22 +326,28 @@ class AstraMusicApp:
         carpeta_destino = self.carpeta_var.get()
         output_template = os.path.join(carpeta_destino, "%(title)s.%(ext)s")
 
+        # Cambiamos las opciones para desactivar el challenge solver problemático y usar formato fallback inteligente
         ydl_opts = {
-            'format': 'bestaudio/best/best*',
+            'format': 'ba/b',               # El más simple y compatible
             'outtmpl': output_template,
             'noplaylist': True,
             'progress_hooks': [self._hook_progreso],
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
-                'preferredquality': '320',  # Forzado real a 320 kbps (CBR)
+                'preferredquality': '320',
             }],
-            'audioquality': '320',          # Asegura metadatos consistentes a 320 kbps
+            'audioquality': '320',
             'quiet': True,
             'no_warnings': False,
             'logger': LoggerYtDlp(self),
-            'cookiesfrombrowser': ('firefox',),
+            'no_check_certificate': True,    # Salta verificaciones SSL obsoletas en Linux viejo
+            'prefer_insecure': True          # Fuerza fallback rápido ante bloqueos de TLS
         }
+
+        # Intento 2 usa cookies de Firefox únicamente como última opción
+        if intento > 1:
+            ydl_opts['cookiesfrombrowser'] = ('firefox',)
 
         self.root.after(0, self.log_consola, f"[{self.timestamp()}] Intento {intento}/{max_intentos}...\n")
 
@@ -359,7 +365,7 @@ class AstraMusicApp:
                 self.root.after(0, self.actualizar_progreso_ui, 0, f"Reintentando... (intento {intento + 1}/{max_intentos})")
                 self.ejecutar_descarga(url, intento=intento + 1, max_intentos=max_intentos)
             else:
-                self.root.after(0, self.log_consola, f"[{self.timestamp()}] Se agotaron los {max_intentos} intentos.\n")
+                self.root.after(0, self.log_consola, f"[{self.timestamp()}] Se agotaron los {max_intentos} intentos.\\n")
                 self.root.after(0, self.finalizar_descarga, False, f"Error tras {max_intentos} intentos:\n{str(e)}")
 
     def finalizar_descarga(self, exito, mensaje):
