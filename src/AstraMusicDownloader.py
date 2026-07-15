@@ -327,7 +327,7 @@ class AstraMusicApp:
         output_template = os.path.join(carpeta_destino, "%(title)s.%(ext)s")
 
         ydl_opts = {
-            'format': 'bestaudio/best',
+            'format': 'bestaudio/best/best*',
             'outtmpl': output_template,
             'noplaylist': True,
             'progress_hooks': [self._hook_progreso],
@@ -340,6 +340,7 @@ class AstraMusicApp:
             'quiet': True,
             'no_warnings': False,
             'logger': LoggerYtDlp(self),
+            'cookiesfrombrowser': ('firefox',),
         }
 
         self.root.after(0, self.log_consola, f"[{self.timestamp()}] Intento {intento}/{max_intentos}...\n")
